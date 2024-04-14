@@ -1,47 +1,6 @@
 <script lang="ts" setup>
-import { BrowserWalletConnector, VueDappProvider, useVueDapp, type ConnWallet, RDNS } from '@vue-dapp/core'
-import { WalletConnectConnector } from '@vue-dapp/walletconnect'
-
-const { status, isConnected, address, chainId, error, disconnect, connectTo, addConnectors } = useVueDapp()
-
-addConnectors([
-	new BrowserWalletConnector(),
-	new WalletConnectConnector({
-		projectId: '3f3c98042b194264687bf59e104c534a',
-		chains: [1],
-		showQrModal: true,
-		qrModalOptions: {
-			themeMode: 'dark',
-			themeVariables: undefined,
-			desktopWallets: undefined,
-			walletImages: undefined,
-			mobileWallets: undefined,
-			enableExplorer: true,
-			privacyPolicyUrl: undefined,
-			termsOfServiceUrl: undefined,
-		},
-	}),
-])
-
-function onClickMetamask() {
-	if (!isConnected.value) {
-		connectTo('BrowserWallet', { rdns: RDNS.metamask })
-	}
-}
-
-function onClickWalletConnect() {
-	if (!isConnected.value) {
-		connectTo('WalletConnect')
-	}
-}
-
-function handleConnect(wallet: ConnWallet) {
-	console.log('handleConnect', wallet)
-}
-
-function handleDisconnect() {
-	console.log('handleDisconnect')
-}
+import useWallet from './composables/useWallet'
+const { status, isConnected, address, chainId, error, disconnect, onClickMetamask, onClickWalletConnect, handleConnect, handleDisconnect } = useWallet()
 </script>
 
 <template>
