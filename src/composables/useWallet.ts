@@ -1,8 +1,10 @@
 
 import { BrowserWalletConnector, useVueDapp, RDNS, type ConnWallet } from '@vue-dapp/core'
 import { WalletConnectConnector } from '@vue-dapp/walletconnect'
-
-const { status, isConnected, address, chainId, error, disconnect, connectTo, addConnectors } = useVueDapp()
+import { ref } from 'vue'
+export default function useWallet() {
+	const { status, isConnected, address, chainId, error, disconnect, connectTo, addConnectors } = useVueDapp()
+function init() {
 
 addConnectors([
 	new BrowserWalletConnector(),
@@ -22,8 +24,7 @@ addConnectors([
 		},
 	}),
 ])
-
-export default function useWallet() {
+}
 function onClickMetamask() {
 	if (!isConnected.value) {
 		connectTo('BrowserWallet', { rdns: RDNS.metamask })
@@ -43,7 +44,14 @@ function handleConnect(wallet: ConnWallet) {
 function handleDisconnect() {
 	console.log('handleDisconnect')
 }
+const isModalOpen = ref(false)
+
+function onClickConnectBtn() {
+	if (isConnected.value) disconnect()
+	else isModalOpen.value = true
+}
+
  return {
-  status, isConnected, address, chainId, error, disconnect, connectTo, onClickMetamask, onClickWalletConnect, handleConnect, handleDisconnect
+  init, status, isConnected, address, chainId, error, disconnect, connectTo, onClickMetamask, onClickWalletConnect, handleConnect, handleDisconnect, onClickConnectBtn, isModalOpen
  }
 }
